@@ -1,26 +1,62 @@
-@import "tailwindcss";
+/* Custom code from the Webflow site's <head> / page embeds. The main styles are the
+   exported Webflow stylesheet, linked unchanged from public/assets in app/layout.tsx. */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+body .transition {display: block}
+.w-editor .transition {display: none;}
+.no-scroll-transition {overflow: hidden; position: relative;}
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+.horizontal-trigger {height: calc(100% - 100vh);}
+
+/* Section titles demoted from <h1> (one H1 per page) keep the exported h1 look. `body …:where()` has
+   element-only specificity (0,0,2): it beats the stylesheet's h2/h3 rules but, like the h1 rule did,
+   still loses to class rules such as .titulo-vantagens. */
+body :is(h2, h3):where(.h1-style) {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-family: inherit;
+  font-size: 2.8em;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 991px) {
+  body :is(h2, h3):where(.h1-style) {font-size: 2.2em;}
+}
+
+/* WebP versions of the exported stylesheet's multi-MB PNG backgrounds (same image, same layout).
+   The `body` prefix outranks the original selectors without editing the Webflow CSS. */
+body .mapa-contato {background-image: url("/assets/cdn.prod.website-files.com/688c79b60ab129131992689c/68a8a0a0581e288d966182ee_gtico_address.webp");}
+body .mapa-contato.sp {background-image: url("/assets/cdn.prod.website-files.com/688c79b60ab129131992689c/68a8a11bd74c7723a0087cc3_Gitco_Plant_Address.webp");}
+body .faixa-numeros-nova {background-image: linear-gradient(#000000bf, #000000bf), url("/assets/cdn.prod.website-files.com/688c79b60ab129131992689c/6898c83285fe593b6ba3795d_gitcogasint-2.webp");}
+
+/* Responsive fixes for the exported layout (same `body` prefix trick). */
+
+/* Decorative arrows and outlines are layered over forms and buttons; let taps pass through them. */
+body img:is([class*="seta-outline-grande"], [class*="seta-azul-peq"], [class*="g-outline"]) {pointer-events: none;}
+
+/* Footer credit line: as flex, its text and link split apart on phones and lose the space between them. */
+body .text-block-14 {display: block;}
+
+/* The distributors table is a fixed 1015px grid. Where it doesn't fit, it scrolls inside its own box
+   instead of widening the whole page (which made phones pan sideways and zoom out). Its container is
+   a centred flex item that would otherwise shrink-wrap the table, so pin it to the available width. */
+@media screen and (max-width: 1159px) {
+  body .container-2 {width: 100%;}
+  body .div-block-2 {width: 100%; overflow-x: auto;}
+  body .div-block-2 > * {width: 1015px;}
+}
+
+@media screen and (max-width: 767px) {
+  body .container-2 {padding-left: 20px; padding-right: 20px;}
+}
+
+@media screen and (max-width: 479px) {
+  /* These two land on top of the home quote form on phones. */
+  body .seta-azul-peq-1, body .seta-azul-peq-2 {display: none;}
+  /* The phone menu is light, so the exported faint-white "Our Team" label is invisible there. */
+  body .nav-link-2.grupo {color: #050922;}
 }
